@@ -6,14 +6,14 @@ if [[ $apikey ]]; then
 fi
 
 if [[ $include ]]; then
-    sed -i -e "s|# Configuration for Custm Metrics Plugins|include = \"${include}\"|" /etc/mackerel-agent/mackerel-agent.conf
+    sed -i -e "s|# Configuration for Custom Metrics Plugins|include = \"${include}\"|" /etc/mackerel-agent/mackerel-agent.conf
 fi
 
 if [[ $auto_retirement ]]; then
     trap '/usr/bin/mackerel-agent retire -force' TERM KILL
 fi
 
-echo /usr/bin/mackerel-agent -apikey=${apikey} $opts
-/usr/bin/mackerel-agent $opts &
+echo /usr/bin/mackerel-agent -apikey=${apikey} ${opts}
+/usr/bin/mackerel-agent ${opts} &
 wait ${!}
 

@@ -12,7 +12,7 @@ RUN apt-get update \
 
 # setup docker plugin
 RUN echo [plugin.metrics.docker] >> /etc/mackerel-agent/mackerel-agent.conf
-RUN echo command = \"/usr/local/bin/mackerel-plugin-docker -name-format name\" >> /etc/mackerel-agent/mackerel-agent.conf
+RUN echo command = \"/usr/bin/mackerel-plugin-docker -name-format name\" >> /etc/mackerel-agent/mackerel-agent.conf
 
 ADD startup.sh /startup.sh
 RUN chmod 755 /startup.sh

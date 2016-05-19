@@ -1,0 +1,40 @@
+machine:
+  timezone:
+    Asia/Tokyo
+
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update kubectl
+    - sudo chown ubuntu /opt/google-cloud-sdk -R
+    - echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud config set project ${GCP_PROJECT_NAME}
+    - sudo /opt/google-cloud-sdk/bin/gcloud config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
+    - type sigil > /dev/null 2>&1 || curl -kL "https://dl.gliderlabs.com/sigil/latest/$(uname -sm|tr \  _).tgz" | sudo tar -zxC /usr/bin
+
+  override:
+    - docker info
+
+test:
+  override:
+    - ':'
+
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - ./bin/docker_build.sh ${CIRCLE_BRANCH}
+      - docker run asia.gcr.io/${GCP_PROJECT_NAME}/mackerel-agent:latest ls /startup.sh
+
+
+  release:
+    branch: [staging, production]
+    commands:
+      - ./bin/build.sh ${CIRCLE_BRANCH}
+      - ENV=${CIRCLE_BRANCH} bash -uvx ./bin/deploy.sh:
+          timeout: 600

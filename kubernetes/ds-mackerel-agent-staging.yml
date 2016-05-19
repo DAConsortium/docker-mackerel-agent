@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    name: gke-mackerel-agent-staging
+  name: gke-mackerel-agent-staging
+spec:
+  template:
+    metadata:
+      labels:
+        app: gke-mackerel-agent-staging
+    spec:
+      containers:
+        - name: gke-mackerel-agent-staging
+          image: asia.gcr.io/${GCP_PROJECT_NAME}/mackerel-agent:${CIRCLE_BRANCH}
+          imagePullPolicy: Always
+          env:
+          - name: apikey
+            value: ${MACKEREL_APIKEY}
+          - name: auto_retirement
+            value: foo
+          - name: opts
+            value: -role=${MACKEREL_SERVICE}:GKE-stg
+          volumeMounts:
+          - name: docker-sock
+            mountPath: /var/run/docker.sock
+          - name: mackerel-id
+            mountPath: /var/lib/mackerel-agent/
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: mackerel-id
+          hostPath:
+            path: /var/lib/mackerel-agent/

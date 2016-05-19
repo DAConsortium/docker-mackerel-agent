@@ -15,6 +15,7 @@ dependencies:
     - sudo /opt/google-cloud-sdk/bin/gcloud config set project ${GCP_PROJECT_NAME}
     - sudo /opt/google-cloud-sdk/bin/gcloud config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
     - type sigil > /dev/null 2>&1 || curl -kL "https://dl.gliderlabs.com/sigil/latest/$(uname -sm|tr \  _).tgz" | sudo tar -zxC /usr/bin
+    - sudo chown -R ubuntu /home/ubuntu/.config/gcloud/
 
   override:
     - docker info

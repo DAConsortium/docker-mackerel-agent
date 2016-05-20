@@ -3,7 +3,6 @@ FROM debian:jessie-backports
 # setup mackerel-agent
 RUN apt-get update \
   && apt-get -y install curl sudo docker.io \
-#  && curl -sSL https://get.docker.com/ | sh \
   && curl -fsSL https://mackerel.io/assets/files/scripts/setup-apt.sh | sh \
   && apt-get update \
   && apt-get -y install mackerel-agent mackerel-agent-plugins \

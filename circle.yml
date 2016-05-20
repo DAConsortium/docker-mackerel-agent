@@ -26,13 +26,15 @@ test:
 
 
 deployment:
+  temporal:
+    branch: fix/circleci-docker-build-error
+    commands:
+      - ./bin/docker_build.sh ${CIRCLE_BRANCH}
   master:
     branch: master
     commands:
       - ./bin/docker_build.sh ${CIRCLE_BRANCH}
       - docker run asia.gcr.io/${GCP_PROJECT_NAME}/mackerel-agent:latest ls /startup.sh
-
-
   release:
     branch: [staging, production]
     commands:
